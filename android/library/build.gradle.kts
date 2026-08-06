@@ -58,7 +58,7 @@ afterEvaluate {
                 pom {
                     name.set(findProperty("POM_NAME") as String? ?: "LoginWA OTP Android SDK")
                     description.set(findProperty("POM_DESCRIPTION") as String? ?: "Lightweight Kotlin client for LoginWA OTP API over WhatsApp")
-                    url.set(findProperty("POM_URL") as String? ?: "https://github.com/yourelevendev-ux/loginwa")
+                    url.set(findProperty("POM_URL") as String? ?: "https://github.com/satuapps/loginwa-sdk")
                     licenses {
                         license {
                             name.set(findProperty("POM_LICENSE_NAME") as String? ?: "MIT")
@@ -72,7 +72,7 @@ afterEvaluate {
                         }
                     }
                     scm {
-                        url.set(findProperty("POM_SCM_URL") as String? ?: "https://github.com/yourelevendev-ux/loginwa")
+                        url.set(findProperty("POM_SCM_URL") as String? ?: "https://github.com/satuapps/loginwa-sdk")
                     }
                 }
             }
