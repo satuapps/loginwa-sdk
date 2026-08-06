@@ -1,0 +1,444 @@
+{
+  "info": {
+    "name": "LoginWA API",
+    "description": "Official Postman collection for the LoginWA WhatsApp API.\n\nSet the `base_url` and `api_key` collection variables. Authorization is configured at the collection level as Bearer `{{api_key}}`; you can alternatively send the `X-Api-Key` header.\n\nDocs: https://loginwa.com/reference",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{api_key}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://api.loginwa.com", "type": "string" },
+    { "key": "api_key", "value": "YOUR_API_KEY_SECRET", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth / OTP",
+      "item": [
+        {
+          "name": "Start OTP",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/start",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "auth", "start" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+6281234567890\",\n  \"country_code\": \"62\",\n  \"otp_length\": 6,\n  \"message_template\": \"Your LoginWA code is {{code}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/verify",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "auth", "verify" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"otp_9f3c1b2a4d\",\n  \"otp_code\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Start OTP (v1)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/start",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "auth", "start" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+6281234567890\",\n  \"device_id\": \"dev_ab12cd34ef56\",\n  \"country_code\": \"62\",\n  \"otp_length\": 6\n}"
+            }
+          }
+        },
+        {
+          "name": "Verify OTP (v1)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/verify",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "auth", "verify" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"otp_9f3c1b2a4d\",\n  \"otp_code\": \"123456\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/messages/send",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "messages", "send" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+6281234567890\",\n  \"message\": \"Hello from LoginWA!\",\n  \"device_id\": \"dev_ab12cd34ef56\",\n  \"meta\": {\n    \"order_id\": \"INV-1001\"\n  }\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "List Devices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/devices",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "devices" ]
+            }
+          }
+        },
+        {
+          "name": "Register Device",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/devices",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "devices" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Sales line\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Device",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/devices/dev_ab12cd34ef56",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "devices", "dev_ab12cd34ef56" ]
+            }
+          }
+        },
+        {
+          "name": "Delete Device",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/devices/dev_ab12cd34ef56",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "devices", "dev_ab12cd34ef56" ]
+            }
+          }
+        },
+        {
+          "name": "Refresh Device QR",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/devices/dev_ab12cd34ef56/refresh-qr",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "devices", "dev_ab12cd34ef56", "refresh-qr" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "List Webhooks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/webhooks",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "webhooks" ]
+            }
+          }
+        },
+        {
+          "name": "Create Webhook",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/webhooks",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "webhooks" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://example.com/hooks/loginwa\",\n  \"events\": [\"message.incoming\", \"message.delivered\"],\n  \"retry_count\": 3\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Webhook",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/webhooks/12",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "webhooks", "12" ]
+            }
+          }
+        },
+        {
+          "name": "Update Webhook",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/webhooks/12",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "webhooks", "12" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\"message.incoming\", \"message.failed\"],\n  \"active\": true,\n  \"retry_count\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Webhook",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/webhooks/12",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "webhooks", "12" ]
+            }
+          }
+        },
+        {
+          "name": "Regenerate Webhook Secret",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/webhooks/12/regenerate-secret",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "webhooks", "12", "regenerate-secret" ]
+            }
+          }
+        },
+        {
+          "name": "Test Webhook",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/webhooks/12/test",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "webhooks", "12", "test" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Broadcast",
+      "item": [
+        {
+          "name": "List Campaigns",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/broadcast/campaigns",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "broadcast", "campaigns" ]
+            }
+          }
+        },
+        {
+          "name": "Create Campaign",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/broadcast/campaigns",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "broadcast", "campaigns" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"May promo\",\n  \"message\": \"Hi {{name}}, enjoy 20% off this week!\",\n  \"contacts\": [\n    { \"phone\": \"+6281234567890\", \"name\": \"Andi\", \"variables\": { \"name\": \"Andi\" } },\n    { \"phone\": \"+6289876543210\", \"name\": \"Budi\" }\n  ],\n  \"media_url\": \"https://cdn.example.com/promo.jpg\",\n  \"media_type\": \"image\",\n  \"delay_seconds\": 5,\n  \"schedule_at\": \"2026-06-05T09:00:00+00:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Campaign",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3" ]
+            }
+          }
+        },
+        {
+          "name": "Delete Campaign",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3" ]
+            }
+          }
+        },
+        {
+          "name": "Send Campaign",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3/send",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3", "send" ]
+            }
+          }
+        },
+        {
+          "name": "Pause Campaign",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3/pause",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3", "pause" ]
+            }
+          }
+        },
+        {
+          "name": "Resume Campaign",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3/resume",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3", "resume" ]
+            }
+          }
+        },
+        {
+          "name": "List Campaign Contacts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3/contacts?status=sent",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3", "contacts" ],
+              "query": [
+                { "key": "status", "value": "sent", "description": "Filter by delivery status (pending, sent, failed, delivered, read).", "disabled": true }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "IP Whitelist",
+      "item": [
+        {
+          "name": "List Whitelisted IPs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/ip-whitelist",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "ip-whitelist" ]
+            }
+          }
+        },
+        {
+          "name": "Add IP to Whitelist",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/ip-whitelist",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "ip-whitelist" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ip_address\": \"203.0.113.10\",\n  \"label\": \"Office\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Remove IP from Whitelist",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/ip-whitelist/3",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "ip-whitelist", "3" ]
+            }
+          }
+        },
+        {
+          "name": "Toggle IP Restriction",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/ip-whitelist/toggle",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "v1", "ip-whitelist", "toggle" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

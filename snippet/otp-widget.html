@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoginWA OTP Widget</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 18px; background: #f6f8fb; }
+    .card { max-width: 420px; margin: 0 auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .row { display: flex; gap: 8px; margin: 8px 0; }
+    label { display: block; font-size: 13px; color: #374151; margin-bottom: 4px; }
+    input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
+    button { padding: 10px 12px; border-radius: 8px; border: none; cursor: pointer; background: linear-gradient(135deg, #0ea5e9, #6366f1); color: #fff; font-weight: 600; }
+    .status { font-size: 13px; margin-top: 8px; color: #4b5563; }
+    .status.err { color: #b91c1c; }
+    .status.ok { color: #15803d; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>LoginWA OTP Widget</h2>
+    <label>API Key</label>
+    <input id="apiKey" placeholder="Your API key (Bearer)">
+
+    <label>Phone</label>
+    <input id="phone" placeholder="6281234567890">
+
+    <div class="row">
+      <button id="sendBtn" type="button">Send OTP</button>
+      <button id="verifyBtn" type="button">Verify</button>
+    </div>
+
+    <label>OTP Code</label>
+    <input id="otp" placeholder="123456">
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const baseUrl = 'https://api.loginwa.com/api/v1';
+    let sessionId = '';
+
+    const apiKeyInput = document.getElementById('apiKey');
+    const phoneInput = document.getElementById('phone');
+    const otpInput = document.getElementById('otp');
+    const statusEl = document.getElementById('status');
+
+    function setStatus(msg, cls) {
+      statusEl.textContent = msg || '';
+      statusEl.className = 'status ' + (cls || '');
+    }
+
+    async function apiFetch(path, body) {
+      const key = apiKeyInput.value.trim();
+      if (!key) throw new Error('API key required');
+      const res = await fetch(baseUrl + path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + key
+        },
+        body: JSON.stringify(body)
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json?.message || 'HTTP ' + res.status);
+      }
+      return json;
+    }
+
+    document.getElementById('sendBtn').onclick = async () => {
+      try {
+        setStatus('Sending OTP...');
+        const json = await apiFetch('/auth/start', {
+          phone: phoneInput.value.replace(/[^0-9]/g, '')
+        });
+        sessionId = json.session_id || '';
+        setStatus('OTP sent. session_id: ' + sessionId, 'ok');
+      } catch (e) {
+        setStatus('Failed: ' + e.message, 'err');
+      }
+    };
+
+    document.getElementById('verifyBtn').onclick = async () => {
+      try {
+        setStatus('Verifying...');
+        const json = await apiFetch('/auth/verify', {
+          session_id: sessionId,
+          otp_code: otpInput.value
+        });
+        setStatus('Verified: ' + (json.status || 'ok'), 'ok');
+      } catch (e) {
+        setStatus('Failed: ' + e.message, 'err');
+      }
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "@loginwa/sdk",
+  "version": "0.2.0",
+  "description": "LoginWA WhatsApp API client (JS): OTP, messaging, media, broadcast, devices, webhooks",
+  "main": "src/index.js",
+  "type": "module",
+  "keywords": [
+    "loginwa",
+    "whatsapp",
+    "whatsapp-api",
+    "otp",
+    "messaging",
+    "broadcast",
+    "sdk"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satuapps/loginwa-sdk.git",
+    "directory": "js"
+  },
+  "homepage": "https://loginwa.com/docs",
+  "bugs": {
+    "url": "https://github.com/satuapps/loginwa-sdk/issues"
+  }
+}

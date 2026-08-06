@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:dividerPadding="8dp"
+        android:gravity="center_horizontal"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LoginWA OTP Demo"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/inputPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:hint="Phone (e.g. 6281234567890)" />
+
+        <EditText
+            android:id="@+id/inputCountry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Country code (optional, e.g. 62)"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start OTP" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
+
+        <EditText
+            android:id="@+id/inputSession"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Session ID"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/inputCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="OTP Code"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/btnVerify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Verify OTP" />
+
+        <TextView
+            android:id="@+id/textStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status:"
+            android:paddingTop="12dp" />
+    </LinearLayout>
+</ScrollView>
