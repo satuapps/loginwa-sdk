@@ -56,7 +56,7 @@ const result = await wa.verifyOtp({ sessionId: start.session_id, otpCode: '12345
 - `sendVideo({ phone, mediaUrl, caption?, deviceId?, meta? })`
 - `sendDocument({ phone, mediaUrl, filename?, caption?, mimetype?, deviceId?, meta? })`
 - `sendAudio({ phone, mediaUrl, ptt?, mimetype?, deviceId?, meta? })`
-- `checkNumbers({ phones, deviceId? })` — up to 100 numbers
+- `checkNumbers({ phones, deviceId? })` — up to 20 numbers
 
 **Devices**
 - `listDevices()`

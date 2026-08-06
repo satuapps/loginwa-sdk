@@ -17,9 +17,17 @@ repository these same files live under `laravel-app/sdk/`, which is the single
 source they are published from — edit them there, never here.
 
 ## API Basics
-- Base URL: `https://loginwa.com/api/v1`
-- Auth: `Authorization: Bearer <YOUR_API_KEY>`
+- Base URL (host): `https://api.loginwa.com`
+- SDK default (includes version prefix): `https://api.loginwa.com/api/v1`
+- Auth: `Authorization: Bearer <YOUR_API_KEY>` (or `X-Api-Key`)
 - Content-Type: `application/json`
+- Also reachable at `https://loginwa.com/api` (same routes under `/api/…`)
+
+OTP product paths: SDKs call `/auth/start` and `/auth/verify` against the
+`/api/v1` base (i.e. `POST /api/v1/auth/start|verify`). The preferred narrative
+docs path `/api/auth/start|verify` is equivalent for sending/verifying codes;
+v1 start responses also include `sent_via_engine` and `quota_remaining`, and
+v1 verify returns `phone` (not `phone_number`).
 
 ## Quick Start
 ### JavaScript SDK
@@ -36,7 +44,7 @@ try {
   const verify = await client.verifyOtp({ sessionId: start.session_id, otpCode: '123456' });
   console.log('verified', verify);
 } catch (err) {
-  console.error('OTP error', err?.response?.status, err?.response?.data || err.message);
+  console.error('OTP error', err?.status, err?.data || err.message);
 }
 ```
 
@@ -53,7 +61,7 @@ try {
     $start = $client->startOtp(['phone' => '6281234567890', 'country_code' => '62']);
     $verify = $client->verifyOtp(['session_id' => $start['session_id'], 'otp_code' => '123456']);
     var_dump($verify);
-} catch (\RuntimeException $e) {
+} catch (\LoginWA\SDK\ApiException $e) {
     // HTTP status is in $e->getCode()
     echo 'OTP error: ' . $e->getCode() . ' ' . $e->getMessage();
 }
@@ -63,20 +71,22 @@ try {
 Open `sdk/snippet/otp-widget.html`, set your API key/Base URL, and embed in any page. Uses Fetch to call `/auth/start` and `/auth/verify`.
 
 ### Postman Collection
-Import `docs/postman/loginwa-api.postman_collection.json`, set `baseUrl` (default `https://loginwa.com/api/v1`) and `apiKey` variables, then run start/verify flows.
+Import `docs/postman/loginwa-api.postman_collection.json`, set `base_url` (default `https://api.loginwa.com`) and `api_key` variables, then run the flows.
 
 ## Common errors
 - `401 unauthorized` — missing/invalid API key.
-- `422 invalid_phone` — phone format not accepted.
-- `422 invalid_code` | `expired` | `max_attempts` — verification failed.
-- `429 quota_exceeded` — rate/quota exceeded for this key.
+- `402 subscription_suspended` — inactive, suspended, or past-due subscription.
+- `422 invalid_code` | `expired` | `blocked` — verification failed.
+- `429 quota_exceeded` — monthly plan quota exceeded.
+- `429 rate_limited` — too many requests per minute (`Retry-After` header).
+- `503 no_device_connected` — no online WhatsApp device for the app.
 - Network/timeout — retry with backoff; SDK throws with HTTP status in error object/exception code.
 
 ## Download
 Packaged ZIP (same contents as this repo): `https://loginwa.com/loginwa-batch1-sdk.zip`
 
 ## Changelog
-- `0.1.0` — Initial client SDKs (JS, PHP), snippet, Postman, docs.
+See `CHANGELOG.md`.
 
 ## Support
 Questions/feedback: dev@loginwa.com

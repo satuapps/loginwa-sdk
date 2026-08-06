@@ -1,11 +1,11 @@
 # LoginWA SDKs & Tools
 
-Batch 1 deliverables for non-WordPress users.
+Quick reference for the public client assets in this repository.
 
 ## JS SDK
-- Path: `sdk/js`
+- Path: `js`
 - Entry: `src/index.js`
-- Install: `npm install @loginwa/sdk` (local package)
+- Package: `@loginwa/sdk`
 - Usage:
 ```js
 import { LoginWAClient } from '@loginwa/sdk';
@@ -15,13 +15,13 @@ try {
   const verify = await client.verifyOtp({ sessionId: start.session_id, otpCode: '123456' });
   console.log('verified', verify);
 } catch (err) {
-  console.error('OTP error', err?.response?.status, err?.response?.data || err.message);
+  console.error('OTP error', err?.status, err?.data || err.message);
 }
 ```
 
 ## PHP SDK
-- Path: `sdk/php`
-- Install: `composer require loginwa/sdk` (local package)
+- Path: `php`
+- Package: `loginwa/sdk`
 - Usage:
 ```php
 $client = new LoginWA\SDK\Client('YOUR_API_KEY');
@@ -29,32 +29,35 @@ try {
     $start = $client->startOtp(['phone' => '6281234567890', 'country_code' => '62']);
     $verify = $client->verifyOtp(['session_id' => $start['session_id'], 'otp_code' => '123456']);
     var_dump($verify);
-} catch (\RuntimeException $e) {
+} catch (\LoginWA\SDK\ApiException $e) {
     echo 'OTP error: ' . $e->getCode() . ' ' . $e->getMessage();
 }
 ```
 
 ## OTP Widget Snippet
-- Path: `sdk/snippet/otp-widget.html`
-- HTML/JS embed; set API key and call /auth/start + /auth/verify via fetch.
+- Path: `snippet/otp-widget.html`
+- HTML/JS embed; set API key and call `/auth/start` + `/auth/verify` via fetch against the `/api/v1` base.
 
 ## Postman
 - Path: `docs/postman/loginwa-api.postman_collection.json`
-- Variables: `baseUrl` (default `https://loginwa.com/api/v1`), `apiKey`.
+- Variables: `base_url` (default `https://api.loginwa.com`), `api_key`.
 
 ## Auth & Headers
-- `Authorization: Bearer <SECRET_API_KEY>`
-- `Content-Type: application/json`
+- `Authorization: Bearer <SECRET_API_KEY>` (or `X-Api-Key`)
+- `Content-Type: `application/json`
 
 ## Base URL
-- Default `https://loginwa.com/api/v1` (overrideable in SDK constructor).
+- Host: `https://api.loginwa.com`
+- SDK default: `https://api.loginwa.com/api/v1` (overrideable in the constructor).
+- Also reachable at `https://loginwa.com/api`.
 
 ## Common errors
 - `401 unauthorized` — missing/invalid API key.
-- `422 invalid_phone` — phone format not accepted.
-- `422 invalid_code` | `expired` | `max_attempts` — verification failed.
-- `429 quota_exceeded` — rate/quota exceeded for this key.
+- `402 subscription_suspended` — inactive, suspended, or past-due subscription.
+- `422 invalid_code` | `expired` | `blocked` — verification failed.
+- `429 quota_exceeded` — monthly plan quota exceeded.
+- `429 rate_limited` — too many requests per minute.
 - Network/timeout — retry with backoff; SDK throws with HTTP status in error object/exception code.
 
 ## Changelog
-- `0.1.0` — Initial client SDKs (JS, PHP), snippet, Postman, docs.
+See `CHANGELOG.md`.

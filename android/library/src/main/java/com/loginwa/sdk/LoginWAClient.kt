@@ -91,10 +91,11 @@ class LoginWAClient @JvmOverloads constructor(
                     throw HttpError(response.code, codeFrom(body), body)
                 }
                 val json = JSONObject(body ?: "{}")
+                val sessionId = json.optString("session_id", null)?.takeIf { it.isNotBlank() }
                 return StartOtpResponse(
-                    success = json.optBoolean("success", false),
-                    message = json.optString("message", null),
-                    sessionId = json.optString("session_id", null),
+                    success = sessionId != null,
+                    message = json.optString("message", null)?.takeIf { it.isNotBlank() },
+                    sessionId = sessionId,
                     expiresIn = json.optLong("expires_in", 0L).takeIf { it > 0 },
                     sentViaEngine = json.optBoolean("sent_via_engine", false),
                 )
@@ -116,11 +117,13 @@ class LoginWAClient @JvmOverloads constructor(
                     throw HttpError(response.code, codeFrom(body), body)
                 }
                 val json = JSONObject(body ?: "{}")
+                val phone = json.optString("phone", null)?.takeIf { it.isNotBlank() }
+                    ?: json.optString("phone_number", null)?.takeIf { it.isNotBlank() }
                 return VerifyOtpResponse(
-                    status = json.optString("status", null),
-                    phone = json.optString("phone", null),
-                    verifiedAt = json.optString("verified_at", null),
-                    message = json.optString("message", null)
+                    status = json.optString("status", null)?.takeIf { it.isNotBlank() },
+                    phone = phone,
+                    verifiedAt = json.optString("verified_at", null)?.takeIf { it.isNotBlank() },
+                    message = json.optString("message", null)?.takeIf { it.isNotBlank() }
                 )
             }
         } catch (e: HttpError) {
@@ -136,7 +139,9 @@ class LoginWAClient @JvmOverloads constructor(
         if (body.isNullOrBlank()) return null
         return try {
             val json = JSONObject(body)
-            json.optString("code", null)
+            sequenceOf("error", "status", "code")
+                .mapNotNull { key -> json.optString(key, null)?.takeIf { it.isNotBlank() } }
+                .firstOrNull()
         } catch (_: Exception) {
             null
         }

@@ -66,7 +66,7 @@ class Client
     /**
      * Check which numbers are registered on WhatsApp before sending.
      *
-     * @param array<int, string> $phones up to 100
+     * @param array<int, string> $phones up to 20
      * @return array<string, mixed>
      */
     public function checkNumbers(array $phones, ?string $deviceId = null): array

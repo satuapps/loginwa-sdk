@@ -1,18 +1,30 @@
 {
   "info": {
     "name": "LoginWA API",
-    "description": "Official Postman collection for the LoginWA WhatsApp API.\n\nSet the `base_url` and `api_key` collection variables. Authorization is configured at the collection level as Bearer `{{api_key}}`; you can alternatively send the `X-Api-Key` header.\n\nDocs: https://loginwa.com/reference",
+    "description": "Official Postman collection for the LoginWA WhatsApp API.\n\nSet the `base_url` and `api_key` collection variables. Authorization is configured at the collection level as Bearer `{{api_key}}`; you can alternatively send the `X-Api-Key` header.\n\nDocs: https://loginwa.com/reference\n\nIncludes numbers/check, device pairing-code, and device groups.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
     "type": "bearer",
     "bearer": [
-      { "key": "token", "value": "{{api_key}}", "type": "string" }
+      {
+        "key": "token",
+        "value": "{{api_key}}",
+        "type": "string"
+      }
     ]
   },
   "variable": [
-    { "key": "base_url", "value": "https://api.loginwa.com", "type": "string" },
-    { "key": "api_key", "value": "YOUR_API_KEY_SECRET", "type": "string" }
+    {
+      "key": "base_url",
+      "value": "https://api.loginwa.com",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "YOUR_API_KEY_SECRET",
+      "type": "string"
+    }
   ],
   "item": [
     {
@@ -22,11 +34,22 @@
           "name": "Start OTP",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/auth/start",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "auth", "start" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "start"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -38,11 +61,22 @@
           "name": "Verify OTP",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/auth/verify",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "auth", "verify" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "verify"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -54,11 +88,23 @@
           "name": "Start OTP (v1)",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/auth/start",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "auth", "start" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "start"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -70,11 +116,23 @@
           "name": "Verify OTP (v1)",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/auth/verify",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "auth", "verify" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "verify"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -91,15 +149,60 @@
           "name": "Send Message",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/messages/send",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "messages", "send" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "messages",
+                "send"
+              ]
             },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"phone\": \"+6281234567890\",\n  \"message\": \"Hello from LoginWA!\",\n  \"device_id\": \"dev_ab12cd34ef56\",\n  \"meta\": {\n    \"order_id\": \"INV-1001\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Check Numbers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/numbers/check",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "numbers",
+                "check"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phones\": [\n    \"6281234567890\",\n    \"6289876543210\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
           }
         }
@@ -115,8 +218,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/devices",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "devices" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices"
+              ]
             }
           }
         },
@@ -124,11 +233,22 @@
           "name": "Register Device",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/devices",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "devices" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -143,8 +263,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/devices/dev_ab12cd34ef56",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "devices", "dev_ab12cd34ef56" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "dev_ab12cd34ef56"
+              ]
             }
           }
         },
@@ -155,8 +282,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/devices/dev_ab12cd34ef56",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "devices", "dev_ab12cd34ef56" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "dev_ab12cd34ef56"
+              ]
             }
           }
         },
@@ -167,8 +301,70 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/devices/dev_ab12cd34ef56/refresh-qr",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "devices", "dev_ab12cd34ef56", "refresh-qr" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "dev_ab12cd34ef56",
+                "refresh-qr"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Request Pairing Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/devices/dev_ab12cd34ef56/pairing-code",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "dev_ab12cd34ef56",
+                "pairing-code"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"6281234567890\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "List Device Groups",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/devices/dev_ab12cd34ef56/groups",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "dev_ab12cd34ef56",
+                "groups"
+              ]
             }
           }
         }
@@ -184,8 +380,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/webhooks",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "webhooks" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "webhooks"
+              ]
             }
           }
         },
@@ -193,11 +395,22 @@
           "name": "Create Webhook",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/webhooks",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "webhooks" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "webhooks"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -212,8 +425,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/webhooks/12",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "webhooks", "12" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "webhooks",
+                "12"
+              ]
             }
           }
         },
@@ -221,11 +441,23 @@
           "name": "Update Webhook",
           "request": {
             "method": "PUT",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/webhooks/12",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "webhooks", "12" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "webhooks",
+                "12"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -240,8 +472,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/webhooks/12",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "webhooks", "12" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "webhooks",
+                "12"
+              ]
             }
           }
         },
@@ -252,8 +491,16 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/webhooks/12/regenerate-secret",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "webhooks", "12", "regenerate-secret" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "webhooks",
+                "12",
+                "regenerate-secret"
+              ]
             }
           }
         },
@@ -264,8 +511,16 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/webhooks/12/test",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "webhooks", "12", "test" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "webhooks",
+                "12",
+                "test"
+              ]
             }
           }
         }
@@ -281,8 +536,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/broadcast/campaigns",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "broadcast", "campaigns" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "broadcast",
+                "campaigns"
+              ]
             }
           }
         },
@@ -290,11 +552,23 @@
           "name": "Create Campaign",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/broadcast/campaigns",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "broadcast", "campaigns" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "broadcast",
+                "campaigns"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -309,8 +583,16 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "broadcast",
+                "campaigns",
+                "cmp_a1b2c3"
+              ]
             }
           }
         },
@@ -321,8 +603,16 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "broadcast",
+                "campaigns",
+                "cmp_a1b2c3"
+              ]
             }
           }
         },
@@ -333,8 +623,17 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3/send",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3", "send" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "broadcast",
+                "campaigns",
+                "cmp_a1b2c3",
+                "send"
+              ]
             }
           }
         },
@@ -345,8 +644,17 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3/pause",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3", "pause" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "broadcast",
+                "campaigns",
+                "cmp_a1b2c3",
+                "pause"
+              ]
             }
           }
         },
@@ -357,8 +665,17 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3/resume",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3", "resume" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "broadcast",
+                "campaigns",
+                "cmp_a1b2c3",
+                "resume"
+              ]
             }
           }
         },
@@ -369,10 +686,24 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/broadcast/campaigns/cmp_a1b2c3/contacts?status=sent",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "broadcast", "campaigns", "cmp_a1b2c3", "contacts" ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "broadcast",
+                "campaigns",
+                "cmp_a1b2c3",
+                "contacts"
+              ],
               "query": [
-                { "key": "status", "value": "sent", "description": "Filter by delivery status (pending, sent, failed, delivered, read).", "disabled": true }
+                {
+                  "key": "status",
+                  "value": "sent",
+                  "description": "Filter by delivery status (pending, sent, failed, delivered, read).",
+                  "disabled": true
+                }
               ]
             }
           }
@@ -389,8 +720,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/ip-whitelist",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "ip-whitelist" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ip-whitelist"
+              ]
             }
           }
         },
@@ -398,11 +735,22 @@
           "name": "Add IP to Whitelist",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/ip-whitelist",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "ip-whitelist" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ip-whitelist"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -417,8 +765,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/ip-whitelist/3",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "ip-whitelist", "3" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ip-whitelist",
+                "3"
+              ]
             }
           }
         },
@@ -426,11 +781,23 @@
           "name": "Toggle IP Restriction",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/v1/ip-whitelist/toggle",
-              "host": [ "{{base_url}}" ],
-              "path": [ "api", "v1", "ip-whitelist", "toggle" ]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ip-whitelist",
+                "toggle"
+              ]
             },
             "body": {
               "mode": "raw",

@@ -56,7 +56,7 @@ $verify = $wa->verifyOtp([
 
 **Messaging**
 - `sendMessage(array $payload)` — `phone` + (`message` for text, or `type` + `media_url` for media; optional `caption`, `filename`, `mimetype`, `ptt`, `device_id`, `meta`)
-- `checkNumbers(array $phones, ?string $deviceId = null)` — up to 100 numbers
+- `checkNumbers(array $phones, ?string $deviceId = null)` — up to 20 numbers
 
 **Devices**
 - `listDevices()`

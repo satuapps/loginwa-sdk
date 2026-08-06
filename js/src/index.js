@@ -199,7 +199,7 @@ export class LoginWAClient {
   /**
    * Check which numbers are registered on WhatsApp before sending.
    * @param {Object} params
-   * @param {string[]} params.phones - up to 100
+   * @param {string[]} params.phones - up to 20
    * @param {string} [params.deviceId]
    */
   async checkNumbers(params) {
