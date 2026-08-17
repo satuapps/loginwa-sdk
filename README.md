@@ -1,20 +1,21 @@
 # LoginWA Client SDKs & Tools
 
-Client-side assets for integrating the LoginWA WhatsApp API — OTP, messaging,
+Client-side assets for integrating the LoginWA WhatsApp API, OTP, messaging,
 media, broadcast, devices and webhooks. JavaScript, PHP and Android SDKs, an
 embeddable OTP widget, and a Postman collection. No server code is included.
 
 ## Contents
-- `js/` — JavaScript SDK (ESM), dependency-free client.
-- `php/` — PHP SDK (cURL-based, PHP >= 8.0).
-- `android/` — Android SDK (Kotlin library + runnable sample app).
-- `snippet/otp-widget.html` — drop-in OTP widget example.
-- `docs/postman/loginwa-api.postman_collection.json` — Postman collection.
-- `docs/sdk.md` — quick reference for these assets.
+- `js/`, JavaScript SDK (ESM), dependency-free client.
+- `php/`, PHP SDK (cURL-based, PHP >= 8.0).
+- `android/`, Android SDK (Kotlin library + runnable sample app).
+- `mcp/`, TypeScript MCP server (`@loginwa/mcp`): device status, OTP, send, broadcast for AI agents. See [`mcp/README.md`](./mcp/README.md); npm/catalog publish steps in [`mcp/PUBLISH.md`](./mcp/PUBLISH.md).
+- `snippet/otp-widget.html`, drop-in OTP widget example.
+- `docs/postman/loginwa-api.postman_collection.json`, Postman collection.
+- `docs/sdk.md`, quick reference for these assets.
 
 Paths are relative to the repository root. Inside the LoginWA application
 repository these same files live under `laravel-app/sdk/`, which is the single
-source they are published from — edit them there, never here.
+source they are published from, edit them there, never here.
 
 ## API Basics
 - Base URL (host): `https://api.loginwa.com`
@@ -67,6 +68,13 @@ try {
 }
 ```
 
+### MCP server (`@loginwa/mcp`)
+```bash
+cd sdk/mcp && npm install && npm run build
+# clients: npx -y @loginwa/mcp  (after npm publish; see mcp/PUBLISH.md)
+```
+Set `LOGINWA_API_KEY`. Details and client configs: [`mcp/README.md`](./mcp/README.md).
+
 ### OTP Widget Snippet
 Open `sdk/snippet/otp-widget.html`, set your API key/Base URL, and embed in any page. Uses Fetch to call `/auth/start` and `/auth/verify`.
 
@@ -74,13 +82,13 @@ Open `sdk/snippet/otp-widget.html`, set your API key/Base URL, and embed in any 
 Import `docs/postman/loginwa-api.postman_collection.json`, set `base_url` (default `https://api.loginwa.com`) and `api_key` variables, then run the flows.
 
 ## Common errors
-- `401 unauthorized` — missing/invalid API key.
-- `402 subscription_suspended` — inactive, suspended, or past-due subscription.
-- `422 invalid_code` | `expired` | `blocked` — verification failed.
-- `429 quota_exceeded` — monthly plan quota exceeded.
-- `429 rate_limited` — too many requests per minute (`Retry-After` header).
-- `503 no_device_connected` — no online WhatsApp device for the app.
-- Network/timeout — retry with backoff; SDK throws with HTTP status in error object/exception code.
+- `401 unauthorized`, missing/invalid API key.
+- `402 subscription_suspended`, inactive, suspended, or past-due subscription.
+- `422 invalid_code` | `expired` | `blocked`, verification failed.
+- `429 quota_exceeded`, monthly plan quota exceeded.
+- `429 rate_limited`, too many requests per minute (`Retry-After` header).
+- `503 no_device_connected`, no online WhatsApp device for the app.
+- Network/timeout, retry with backoff; SDK throws with HTTP status in error object/exception code.
 
 ## Download
 Packaged ZIP (same contents as this repo): `https://loginwa.com/loginwa-batch1-sdk.zip`
