@@ -8,7 +8,7 @@ embeddable OTP widget, and a Postman collection. No server code is included.
 - `js/`, JavaScript SDK (ESM), dependency-free client.
 - `php/`, PHP SDK (cURL-based, PHP >= 8.0).
 - `android/`, Android SDK (Kotlin library + runnable sample app).
-- `mcp/`, TypeScript MCP server (`@loginwa/mcp`): device status, OTP, send, broadcast for AI agents. See [`mcp/README.md`](./mcp/README.md); npm/catalog publish steps in [`mcp/PUBLISH.md`](./mcp/PUBLISH.md).
+- `mcp/`, TypeScript MCP server (`@loginwa/mcp`): device status, OTP, send, broadcast for AI agents. Install with `npx -y @loginwa/mcp`. See [`mcp/README.md`](./mcp/README.md).
 - `snippet/otp-widget.html`, drop-in OTP widget example.
 - `docs/postman/loginwa-api.postman_collection.json`, Postman collection.
 - `docs/sdk.md`, quick reference for these assets.
@@ -71,7 +71,7 @@ try {
 ### MCP server (`@loginwa/mcp`)
 ```bash
 cd sdk/mcp && npm install && npm run build
-# clients: npx -y @loginwa/mcp  (after npm publish; see mcp/PUBLISH.md)
+# clients: npx -y @loginwa/mcp
 ```
 Set `LOGINWA_API_KEY`. Details and client configs: [`mcp/README.md`](./mcp/README.md).
 
