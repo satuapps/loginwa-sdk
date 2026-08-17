@@ -1,0 +1,99 @@
+{
+  "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/mcpb/main/schemas/mcpb-manifest-v0.3.schema.json",
+  "manifest_version": "0.3",
+  "name": "loginwa-mcp",
+  "display_name": "LoginWA MCP",
+  "version": "0.1.2",
+  "description": "Unofficial MCP server for the LoginWA WhatsApp API: devices, OTP, send, and broadcast.",
+  "long_description": "Hosted WhatsApp API gateway. No VPS required. This unofficial stdio server wraps the public LoginWA HTTP API so agents can list devices, send OTP, send messages, and run broadcast campaigns.\n\nPair devices in the browser at https://loginwa.com/welcome. Create an API key in the dashboard and paste it into LOGINWA_API_KEY. LOGINWA_BASE_URL is optional.\n\nThe process starts and advertises tools even when LOGINWA_API_KEY is unset. Tool calls fail until a key is provided.",
+  "author": {
+    "name": "LoginWA",
+    "url": "https://loginwa.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/satuapps/loginwa-sdk.git"
+  },
+  "homepage": "https://loginwa.com",
+  "documentation": "https://github.com/satuapps/loginwa-sdk/blob/main/mcp/README.md",
+  "support": "https://github.com/satuapps/loginwa-sdk/issues",
+  "license": "MIT",
+  "keywords": [
+    "loginwa",
+    "whatsapp",
+    "mcp",
+    "otp",
+    "messaging",
+    "broadcast"
+  ],
+  "privacy_policies": [
+    "https://loginwa.com/privacy"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {
+        "LOGINWA_API_KEY": "${user_config.LOGINWA_API_KEY}",
+        "LOGINWA_BASE_URL": "${user_config.LOGINWA_BASE_URL}"
+      }
+    }
+  },
+  "user_config": {
+    "LOGINWA_API_KEY": {
+      "type": "string",
+      "title": "LOGINWA_API_KEY",
+      "description": "Required. Dashboard API key secret. Create a key after registering, then paste it here. Never commit the value.",
+      "sensitive": true,
+      "required": true
+    },
+    "LOGINWA_BASE_URL": {
+      "type": "string",
+      "title": "LOGINWA_BASE_URL",
+      "description": "Optional. API base URL. Leave empty to use the LoginWA production API.",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  },
+  "tools": [
+    {
+      "name": "device_status",
+      "description": "List devices or fetch one by id. Reports offline honestly and points to /welcome for pairing."
+    },
+    {
+      "name": "otp_start",
+      "description": "Start a WhatsApp OTP session."
+    },
+    {
+      "name": "otp_verify",
+      "description": "Verify an OTP code against a session from otp_start."
+    },
+    {
+      "name": "send_message",
+      "description": "Send a WhatsApp text or media message from a connected device."
+    },
+    {
+      "name": "list_campaigns",
+      "description": "List broadcast campaigns."
+    },
+    {
+      "name": "get_campaign",
+      "description": "Get details for a broadcast campaign by id."
+    },
+    {
+      "name": "create_campaign",
+      "description": "Create a broadcast campaign with an inline contact list."
+    },
+    {
+      "name": "send_campaign",
+      "description": "Queue a campaign to send. Needs an online device."
+    }
+  ]
+}

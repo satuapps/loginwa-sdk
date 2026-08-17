@@ -1,4 +1,4 @@
-import { DEFAULT_BASE_URL } from './constants.js';
+import { DEFAULT_BASE_URL, REGISTER_URL } from './constants.js';
 
 export class LoginWAApiError extends Error {
   readonly status: number;
@@ -34,7 +34,6 @@ export class LoginWAClient {
   readonly baseUrl: string;
 
   constructor({ apiKey, baseUrl = DEFAULT_BASE_URL }: LoginWAClientOptions) {
-    if (!apiKey) throw new Error('LOGINWA_API_KEY is required');
     this.apiKey = apiKey;
     this.baseUrl = baseUrl.replace(/\/+$/, '');
   }
@@ -44,6 +43,16 @@ export class LoginWAClient {
     path: string,
     { body, query }: { body?: unknown; query?: Record<string, unknown> } = {},
   ): Promise<unknown> {
+    if (!this.apiKey) {
+      throw new LoginWAApiError(
+        'LOGINWA_API_KEY is required. Register at ' +
+          REGISTER_URL +
+          ' then create an API key in the dashboard.',
+        401,
+        null,
+      );
+    }
+
     let url = `${this.baseUrl}${path}`;
     if (query) {
       const params = new URLSearchParams();

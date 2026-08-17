@@ -1,6 +1,6 @@
 {
   "name": "@loginwa/mcp",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Unofficial LoginWA MCP server: device status, OTP, send message, and broadcast campaigns for AI agents",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "mcpb": "bash scripts/build-mcpb.sh",
     "prepublishOnly": "npm run build",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
@@ -40,12 +41,12 @@
   "author": "LoginWA",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/satuapps/loginwa.git",
-    "directory": "server-code/laravel-app/sdk/mcp"
+    "url": "git+https://github.com/satuapps/loginwa-sdk.git",
+    "directory": "mcp"
   },
   "homepage": "https://loginwa.com",
   "bugs": {
-    "url": "https://github.com/satuapps/loginwa/issues"
+    "url": "https://github.com/satuapps/loginwa-sdk/issues"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

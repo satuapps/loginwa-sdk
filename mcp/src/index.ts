@@ -3,8 +3,9 @@
  * @loginwa/mcp, unofficial LoginWA MCP server (stdio).
  *
  * Env:
- *   LOGINWA_API_KEY  (required), API key secret from the LoginWA dashboard
- *   LOGINWA_BASE_URL (optional), default https://api.loginwa.com/api/v1
+ *   LOGINWA_API_KEY  required to call tools. The process starts without it so
+ *                    unauthenticated clients (Glama checks) can list tools.
+ *   LOGINWA_BASE_URL optional, default https://api.loginwa.com/api/v1
  *
  * Pairing: when devices are offline, tools point users to https://loginwa.com/welcome
  * (P0). In-chat pairing-code / QR auto-reissue is intentionally deferred to P1.
@@ -16,20 +17,20 @@ import { LoginWAClient } from './client.js';
 import { DEFAULT_BASE_URL, PRICING_URL, REGISTER_URL, WELCOME_URL } from './constants.js';
 import { registerTools } from './tools.js';
 
-const PACKAGE_VERSION = '0.1.0';
+const PACKAGE_VERSION = '0.1.2';
 
 function createServer(): McpServer {
-  const apiKey = process.env.LOGINWA_API_KEY?.trim();
-  if (!apiKey) {
-    console.error(
-      '[loginwa-mcp] LOGINWA_API_KEY is required. ' +
-        `Register at ${REGISTER_URL} then create an API key in the dashboard.`,
-    );
-    process.exit(1);
-  }
-
+  const apiKey = process.env.LOGINWA_API_KEY?.trim() ?? '';
   const baseUrl = process.env.LOGINWA_BASE_URL?.trim() || DEFAULT_BASE_URL;
   const client = new LoginWAClient({ apiKey, baseUrl });
+
+  if (!apiKey) {
+    console.error(
+      '[loginwa-mcp] LOGINWA_API_KEY is unset; tools are advertised, ' +
+        'calls will fail until a key is provided. ' +
+        `Register at ${REGISTER_URL} then create an API key in the dashboard.`,
+    );
+  }
 
   const server = new McpServer({
     name: 'loginwa',

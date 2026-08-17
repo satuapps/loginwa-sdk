@@ -1,8 +1,24 @@
-# LoginWA Client SDKs & Tools
+# LoginWA MCP Server
 
-Client-side assets for integrating the LoginWA WhatsApp API, OTP, messaging,
-media, broadcast, devices and webhooks. JavaScript, PHP and Android SDKs, an
-embeddable OTP widget, and a Postman collection. No server code is included.
+Unofficial MCP server for the [LoginWA](https://loginwa.com) WhatsApp API.
+LoginWA hosts the WhatsApp engine, so an agent can check devices, send OTP,
+send messages, and run broadcasts without operating a VPS.
+
+[![loginwa-sdk MCP server](https://glama.ai/mcp/servers/satuapps/loginwa-sdk/badges/card.svg)](https://glama.ai/mcp/servers/satuapps/loginwa-sdk)
+[![loginwa-sdk MCP server](https://glama.ai/mcp/servers/satuapps/loginwa-sdk/badges/score.svg)](https://glama.ai/mcp/servers/satuapps/loginwa-sdk)
+
+Tools: `device_status`, `otp_start` / `otp_verify`, `send_message`, and
+broadcast (`list_campaigns`, `get_campaign`, `create_campaign`, `send_campaign`).
+
+```bash
+npx -y @loginwa/mcp
+```
+
+Set `LOGINWA_API_KEY`. Pair devices at [loginwa.com/welcome](https://loginwa.com/welcome).
+Client configs: [`mcp/README.md`](./mcp/README.md).
+
+This repository also ships JavaScript, PHP and Android SDKs, an embeddable OTP
+widget, and a Postman collection. No server code is included.
 
 ## Contents
 - `js/`, JavaScript SDK (ESM), dependency-free client.
