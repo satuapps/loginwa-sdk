@@ -50,12 +50,14 @@ const result = await wa.verifyOtp({ sessionId: start.session_id, otpCode: '12345
 - `verifyOtp({ sessionId, otpCode })`
 
 **Messaging**
-- `sendMessage({ phone, message?, type?, mediaUrl?, caption?, filename?, mimetype?, ptt?, deviceId?, meta? })`
-- `sendText({ phone, message, deviceId?, meta? })`
+- `sendMessage({ phone, message?, type?, mediaUrl?, caption?, filename?, mimetype?, ptt?, deviceId?, meta?, replyTo? })`
+- `sendText({ phone, message, deviceId?, meta?, replyTo? })`
 - `sendImage({ phone, mediaUrl, caption?, deviceId?, meta? })`
 - `sendVideo({ phone, mediaUrl, caption?, deviceId?, meta? })`
 - `sendDocument({ phone, mediaUrl, filename?, caption?, mimetype?, deviceId?, meta? })`
 - `sendAudio({ phone, mediaUrl, ptt?, mimetype?, deviceId?, meta? })`
+- `deleteMessage({ messageId, phone, deviceId? })` — revoke an outbound message (no quota)
+- `getMessage(messageId)` — status: queued|sent|delivered|read|failed|revoked
 - `checkNumbers({ phones, deviceId? })` — up to 20 numbers
 
 **Devices**

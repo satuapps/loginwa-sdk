@@ -1,7 +1,7 @@
 {
   "name": "@loginwa/mcp",
-  "version": "0.1.2",
-  "description": "Unofficial LoginWA MCP server: device status, OTP, send message, and broadcast campaigns for AI agents",
+  "version": "0.2.0",
+  "description": "Unofficial LoginWA MCP server: device status, OTP, reverse OTP, send/delete message, and broadcast campaigns for AI agents",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

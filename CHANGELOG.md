@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 — Reverse OTP
+- `startReverseOtp` / `getReverseOtp` on JS and PHP SDKs (`POST /api/v1/auth/reverse/start`, `GET /api/v1/auth/reverse/{session_id}`). The user sends `LOGIN <code>` to your number; LoginWA sends nothing and bills only on success.
+- Webhook events `otp.verified` and `otp.expired`.
+- MCP server `@loginwa/mcp` 0.2.0: `reverse_otp_start` and `reverse_otp_status` tools (12 tools).
+- `otp_start` / `messageTemplate` docs name the real placeholders `{code}`, `{ttl}` (minutes) and `{app}`; the old `{{otp}}` hint was never substituted.
+
+## 0.2.2 — Delete, status, reply_to
+- `deleteMessage` / `getMessage` on JS and PHP SDKs.
+- Send accepts `reply_to` (`{ id, remote_jid?, from_me? }`; aliases `replyTo` / `quoted`).
+- Send response includes `message_id` (WhatsApp key.id) and `remote_jid` for later delete.
+
 ## 0.2.1 — Docs & contract alignment
 - Document correct production base URL (`https://api.loginwa.com`) and `/api/v1` SDK prefix.
 - Cap `checkNumbers` docs/comments at **20** phones (API limit).

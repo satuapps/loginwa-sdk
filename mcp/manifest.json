@@ -3,9 +3,9 @@
   "manifest_version": "0.3",
   "name": "loginwa-mcp",
   "display_name": "LoginWA MCP",
-  "version": "0.1.2",
-  "description": "Unofficial MCP server for the LoginWA WhatsApp API: devices, OTP, send, and broadcast.",
-  "long_description": "Hosted WhatsApp API gateway. No VPS required. This unofficial stdio server wraps the public LoginWA HTTP API so agents can list devices, send OTP, send messages, and run broadcast campaigns.\n\nPair devices in the browser at https://loginwa.com/welcome. Create an API key in the dashboard and paste it into LOGINWA_API_KEY. LOGINWA_BASE_URL is optional.\n\nThe process starts and advertises tools even when LOGINWA_API_KEY is unset. Tool calls fail until a key is provided.",
+  "version": "0.2.0",
+  "description": "Unofficial MCP server for the LoginWA WhatsApp API: devices, OTP, reverse OTP, send, delete, and broadcast.",
+  "long_description": "Hosted WhatsApp API gateway. No VPS required. This unofficial stdio server wraps the public LoginWA HTTP API so agents can list devices, send OTP, run reverse OTP (the user sends LOGIN <code> to your number and LoginWA sends nothing), send and revoke messages, and run broadcast campaigns.\n\nPair devices in the browser at https://loginwa.com/welcome. Create an API key in the dashboard and paste it into LOGINWA_API_KEY. LOGINWA_BASE_URL is optional.\n\nThe process starts and advertises tools even when LOGINWA_API_KEY is unset. Tool calls fail until a key is provided.",
   "author": {
     "name": "LoginWA",
     "url": "https://loginwa.com"
@@ -76,8 +76,24 @@
       "description": "Verify an OTP code against a session from otp_start."
     },
     {
+      "name": "reverse_otp_start",
+      "description": "Start a reverse OTP session: the user sends LOGIN <code> to your number via wa_link; LoginWA sends nothing."
+    },
+    {
+      "name": "reverse_otp_status",
+      "description": "Check a reverse OTP session: pending, verified (with phone), expired, or failed."
+    },
+    {
       "name": "send_message",
       "description": "Send a WhatsApp text or media message from a connected device."
+    },
+    {
+      "name": "delete_message",
+      "description": "Revoke an outbound WhatsApp message (delete for everyone)."
+    },
+    {
+      "name": "get_message",
+      "description": "Poll one message status: queued, sent, delivered, read, failed, or revoked."
     },
     {
       "name": "list_campaigns",

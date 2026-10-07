@@ -11,9 +11,13 @@ Pair devices in the browser at [loginwa.com/welcome](https://loginwa.com/welcome
 | Tool | Purpose |
 |------|---------|
 | `device_status` | List devices or fetch one by id. Reports offline honestly and points to `/welcome` for pairing. |
-| `otp_start` | Start a WhatsApp OTP session |
+| `otp_start` | Start a WhatsApp OTP session (LoginWA sends the code). `message_template` placeholders: `{code}`, `{ttl}` (minutes), `{app}` |
 | `otp_verify` | Verify an OTP code |
+| `reverse_otp_start` | Start a reverse OTP session: the user sends `LOGIN <code>` to your number via `wa_link`; LoginWA sends nothing. Omit `phone` for Login with WhatsApp, pass it to bind one number |
+| `reverse_otp_status` | Poll a reverse OTP session: `pending`, `verified` (with `phone`), `expired`, or `failed` (with `reason`) |
 | `send_message` | Send text or media |
+| `delete_message` | Revoke an outbound message (delete for everyone) |
+| `get_message` | Poll one message: queued, sent, delivered, read, failed, or revoked |
 | `list_campaigns` | List broadcast campaigns |
 | `get_campaign` | Campaign details |
 | `create_campaign` | Create campaign with inline contacts |

@@ -112,8 +112,24 @@ export class LoginWAClient {
     return this.request('POST', '/auth/verify', { body: compact(body) });
   }
 
+  startReverseOtp(body: Record<string, unknown> = {}) {
+    return this.request('POST', '/auth/reverse/start', { body: compact(body) });
+  }
+
+  getReverseOtp(sessionId: string) {
+    return this.request('GET', `/auth/reverse/${encodeURIComponent(sessionId)}`);
+  }
+
   sendMessage(body: Record<string, unknown>) {
     return this.request('POST', '/messages/send', { body: compact(body) });
+  }
+
+  deleteMessage(body: Record<string, unknown>) {
+    return this.request('POST', '/messages/delete', { body: compact(body) });
+  }
+
+  getMessage(messageId: string) {
+    return this.request('GET', `/messages/${encodeURIComponent(messageId)}`);
   }
 
   listCampaigns(page?: number) {

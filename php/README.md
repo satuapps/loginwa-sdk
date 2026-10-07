@@ -55,7 +55,9 @@ $verify = $wa->verifyOtp([
 - `verifyOtp(array $payload)` — `session_id`, `otp_code`
 
 **Messaging**
-- `sendMessage(array $payload)` — `phone` + (`message` for text, or `type` + `media_url` for media; optional `caption`, `filename`, `mimetype`, `ptt`, `device_id`, `meta`)
+- `sendMessage(array $payload)` — `phone` + (`message` for text, or `type` + `media_url` for media; optional `caption`, `filename`, `mimetype`, `ptt`, `device_id`, `meta`, `reply_to`)
+- `deleteMessage(array $payload)` — `message_id`, `phone`, optional `device_id` (revoke; no quota)
+- `getMessage(string $messageId)` — status queued|sent|delivered|read|failed|revoked
 - `checkNumbers(array $phones, ?string $deviceId = null)` — up to 20 numbers
 
 **Devices**

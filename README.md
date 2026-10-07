@@ -2,12 +2,13 @@
 
 Unofficial MCP server for the [LoginWA](https://loginwa.com) WhatsApp API.
 LoginWA hosts the WhatsApp engine, so an agent can check devices, send OTP,
-send messages, and run broadcasts without operating a VPS.
+run reverse OTP, send messages, and run broadcasts without operating a VPS.
 
 [![loginwa-sdk MCP server](https://glama.ai/mcp/servers/satuapps/loginwa-sdk/badges/card.svg)](https://glama.ai/mcp/servers/satuapps/loginwa-sdk)
 [![loginwa-sdk MCP server](https://glama.ai/mcp/servers/satuapps/loginwa-sdk/badges/score.svg)](https://glama.ai/mcp/servers/satuapps/loginwa-sdk)
 
-Tools: `device_status`, `otp_start` / `otp_verify`, `send_message`, and
+Tools: `device_status`, `otp_start` / `otp_verify`, `reverse_otp_start` /
+`reverse_otp_status`, `send_message`, `delete_message`, `get_message`, and
 broadcast (`list_campaigns`, `get_campaign`, `create_campaign`, `send_campaign`).
 
 ```bash
@@ -24,7 +25,7 @@ widget, and a Postman collection. No server code is included.
 - `js/`, JavaScript SDK (ESM), dependency-free client.
 - `php/`, PHP SDK (cURL-based, PHP >= 8.0).
 - `android/`, Android SDK (Kotlin library + runnable sample app).
-- `mcp/`, TypeScript MCP server (`@loginwa/mcp`): device status, OTP, send, broadcast for AI agents. Install with `npx -y @loginwa/mcp`. See [`mcp/README.md`](./mcp/README.md).
+- `mcp/`, TypeScript MCP server (`@loginwa/mcp`): device status, OTP, reverse OTP, send, broadcast for AI agents. Install with `npx -y @loginwa/mcp`. See [`mcp/README.md`](./mcp/README.md).
 - `snippet/otp-widget.html`, drop-in OTP widget example.
 - `docs/postman/loginwa-api.postman_collection.json`, Postman collection.
 - `docs/sdk.md`, quick reference for these assets.
@@ -46,6 +47,13 @@ docs path `/api/auth/start|verify` is equivalent for sending/verifying codes;
 v1 start responses also include `sent_via_engine` and `quota_remaining`, and
 v1 verify returns `phone` (not `phone_number`).
 
+Reverse OTP ("Login with WhatsApp"): `POST /api/v1/auth/reverse/start` returns
+a `message` (`LOGIN <code>`) and a `wa_link` to your connected number. The user
+sends it; LoginWA sends nothing and bills only on success. Poll
+`GET /api/v1/auth/reverse/{session_id}` or listen for the `otp.verified`
+webhook. Omit `phone` to accept any sender and get their number back; pass
+`phone` to accept only that number.
+
 ## Quick Start
 ### JavaScript SDK
 ```bash
@@ -63,6 +71,10 @@ try {
 } catch (err) {
   console.error('OTP error', err?.status, err?.data || err.message);
 }
+
+// Reverse OTP: show rev.wa_link as a button (mobile) or QR (desktop)
+const rev = await client.startReverseOtp();
+const state = await client.getReverseOtp(rev.session_id); // pending | verified | expired | failed
 ```
 
 ### PHP SDK
@@ -82,6 +94,9 @@ try {
     // HTTP status is in $e->getCode()
     echo 'OTP error: ' . $e->getCode() . ' ' . $e->getMessage();
 }
+
+$rev = $client->startReverseOtp(); // show $rev['wa_link'] as a button or QR
+$state = $client->getReverseOtp($rev['session_id']); // status: pending|verified|expired|failed
 ```
 
 ### MCP server (`@loginwa/mcp`)
@@ -103,6 +118,7 @@ Import `docs/postman/loginwa-api.postman_collection.json`, set `base_url` (defau
 - `422 invalid_code` | `expired` | `blocked`, verification failed.
 - `429 quota_exceeded`, monthly plan quota exceeded.
 - `429 rate_limited`, too many requests per minute (`Retry-After` header).
+- `404 session_not_found`, reverse OTP session id unknown for this app.
 - `503 no_device_connected`, no online WhatsApp device for the app.
 - Network/timeout, retry with backoff; SDK throws with HTTP status in error object/exception code.
 

@@ -88,11 +88,15 @@ try {
   const names = (listed.result?.tools ?? []).map((t) => t.name).sort();
   const expected = [
     'create_campaign',
+    'delete_message',
     'device_status',
     'get_campaign',
+    'get_message',
     'list_campaigns',
     'otp_start',
     'otp_verify',
+    'reverse_otp_start',
+    'reverse_otp_status',
     'send_campaign',
     'send_message',
   ];

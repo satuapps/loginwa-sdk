@@ -148,7 +148,7 @@ export function registerTools(server: McpServer, client: LoginWAClient): void {
         message_template: z
           .string()
           .optional()
-          .describe('Optional message template; use {{otp}} placeholder if customizing'),
+          .describe('Optional message template. Placeholders: {code} (required), {ttl} (minutes), {app} (app name)'),
         device_id: z.string().optional().describe('Optional device to send from'),
       },
     },
@@ -201,6 +201,79 @@ export function registerTools(server: McpServer, client: LoginWAClient): void {
   );
 
   server.registerTool(
+    'reverse_otp_start',
+    {
+      title: 'Start reverse OTP',
+      description:
+        'Start a reverse OTP ("Login with WhatsApp") session. LoginWA sends nothing: the end user sends the returned ' +
+        '`message` (LOGIN <code>) to the app\'s own connected number, usually by opening `wa_link` (button on mobile, ' +
+        'QR code on desktop). Without `phone` any sender completes it and their number is returned (8-digit code); ' +
+        'with `phone` only that number can complete it (6-digit code). Billed only when the login succeeds. ' +
+        'Poll reverse_otp_status or listen for the otp.verified webhook. Requires an online device owned by the app; ' +
+        `otherwise direct the user to ${WELCOME_URL}`,
+      inputSchema: {
+        phone: z
+          .string()
+          .optional()
+          .describe('Optional phone to bind (E.164 or digits). Omit for Login with WhatsApp (any sender).'),
+        country_code: z.string().optional().describe('Optional country code digits for a local phone, e.g. 62'),
+        device_id: z.string().optional().describe('Optional receiving device id; defaults to the app\'s online device'),
+        meta: z
+          .record(z.string(), z.unknown())
+          .optional()
+          .describe('Optional custom data echoed back in the otp.verified / otp.expired webhook'),
+      },
+    },
+    async (args) => {
+      try {
+        const data = await client.startReverseOtp({
+          phone: args.phone,
+          country_code: args.country_code,
+          device_id: args.device_id,
+          meta: args.meta,
+        });
+        return text(data);
+      } catch (err) {
+        if (err instanceof LoginWAApiError && err.status === 503) {
+          return text(
+            {
+              error: true,
+              status: err.status,
+              message: err.message,
+              data: err.data,
+              guidance: PAIRING_GUIDANCE,
+            },
+            true,
+          );
+        }
+        return errorResult(err);
+      }
+    },
+  );
+
+  server.registerTool(
+    'reverse_otp_status',
+    {
+      title: 'Reverse OTP status',
+      description:
+        'Check a reverse OTP session from reverse_otp_start: pending (with expires_in), verified (with phone and ' +
+        'verified_at), expired, or failed (with reason, e.g. sender_hidden when WhatsApp hides the sender number; ' +
+        'fall back to otp_start).',
+      inputSchema: {
+        session_id: z.string().describe('session_id from reverse_otp_start'),
+      },
+    },
+    async ({ session_id }) => {
+      try {
+        const data = await client.getReverseOtp(session_id);
+        return text(data);
+      } catch (err) {
+        return errorResult(err);
+      }
+    },
+  );
+
+  server.registerTool(
     'send_message',
     {
       title: 'Send WhatsApp message',
@@ -222,6 +295,14 @@ export function registerTools(server: McpServer, client: LoginWAClient): void {
         mimetype: z.string().optional().describe('Optional MIME type hint'),
         ptt: z.boolean().optional().describe('For audio: send as voice note when true'),
         device_id: z.string().optional().describe('Optional device to send from'),
+        reply_to: z
+          .object({
+            id: z.string().describe('WhatsApp key.id of the quoted message'),
+            remote_jid: z.string().optional().describe('Chat JID if different from phone'),
+            from_me: z.boolean().optional().describe('True when quoting a message this device sent'),
+          })
+          .optional()
+          .describe('Quote a previous WhatsApp message'),
       },
     },
     async (args) => {
@@ -236,6 +317,7 @@ export function registerTools(server: McpServer, client: LoginWAClient): void {
           mimetype: args.mimetype,
           ptt: args.ptt,
           device_id: args.device_id,
+          reply_to: args.reply_to,
         });
         return text(data);
       } catch (err) {
@@ -251,6 +333,58 @@ export function registerTools(server: McpServer, client: LoginWAClient): void {
             true,
           );
         }
+        return errorResult(err);
+      }
+    },
+  );
+
+  server.registerTool(
+    'delete_message',
+    {
+      title: 'Delete WhatsApp message',
+      description:
+        'Revoke an outbound WhatsApp message (delete for everyone). ' +
+        'Uses message_id + phone from send. Does not consume quota. ' +
+        'WhatsApp may refuse after its time window (too_late).',
+      annotations: {
+        destructiveHint: true,
+        readOnlyHint: false,
+      },
+      inputSchema: {
+        message_id: z.string().describe('WhatsApp key.id from send'),
+        phone: z.string().describe('Recipient phone or group JID (...@g.us)'),
+        device_id: z.string().optional().describe('Optional device that sent the message'),
+      },
+    },
+    async (args) => {
+      try {
+        const data = await client.deleteMessage({
+          message_id: args.message_id,
+          phone: args.phone,
+          device_id: args.device_id,
+        });
+        return text(data);
+      } catch (err) {
+        return errorResult(err);
+      }
+    },
+  );
+
+  server.registerTool(
+    'get_message',
+    {
+      title: 'Get WhatsApp message status',
+      description:
+        'Poll one message owned by this app: queued, sent, delivered, read, failed, or revoked.',
+      inputSchema: {
+        message_id: z.string().describe('WhatsApp message_id or trace_id from send'),
+      },
+    },
+    async ({ message_id }) => {
+      try {
+        const data = await client.getMessage(message_id);
+        return text(data);
+      } catch (err) {
         return errorResult(err);
       }
     },

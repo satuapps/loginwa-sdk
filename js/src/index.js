@@ -4,8 +4,8 @@
  * A thin, dependency-free client for the LoginWA WhatsApp API (v1).
  * Works in Node 18+ and modern browsers (uses the global `fetch`).
  *
- * Covers: OTP, messaging (text + media), number check, devices (QR &
- * pairing-code linking, groups), webhooks, broadcast campaigns, and the
+ * Covers: OTP, reverse OTP, messaging (text + media), number check, devices
+ * (QR & pairing-code linking, groups), webhooks, broadcast campaigns, and the
  * IP whitelist.
  *
  *   import LoginWAClient from '@loginwa/sdk';
@@ -111,7 +111,7 @@ export class LoginWAClient {
    * @param {string} params.phone - e.g. 6281234567890
    * @param {string} [params.countryCode]
    * @param {number} [params.otpLength] - 4..8
-   * @param {string} [params.messageTemplate]
+   * @param {string} [params.messageTemplate] - placeholders {code}, {ttl} (minutes), {app}
    * @param {string} [params.deviceId]
    * @param {Object} [params.meta]
    */
@@ -139,6 +139,35 @@ export class LoginWAClient {
     }));
   }
 
+  /**
+   * Start a reverse OTP session. LoginWA sends nothing: the user sends
+   * `message` (LOGIN <code>) to your connected number, usually via `wa_link`
+   * (button on mobile, QR on desktop). Billed only when the login succeeds.
+   * Returns { session_id, mode, code, message, receiver_phone, wa_link, expires_in, quota_remaining }.
+   * @param {Object} [params]
+   * @param {string} [params.phone] - bind to this number (6-digit code); omit for Login with WhatsApp (8-digit code, any sender)
+   * @param {string} [params.countryCode]
+   * @param {string} [params.deviceId] - receiving device; defaults to the app's online device
+   * @param {Object} [params.meta] - echoed in the otp.verified / otp.expired webhook
+   */
+  async startReverseOtp(params = {}) {
+    return this._post('/auth/reverse/start', compact({
+      phone: params.phone,
+      country_code: params.countryCode,
+      device_id: params.deviceId,
+      meta: params.meta,
+    }));
+  }
+
+  /**
+   * Read a reverse OTP session: status pending (expires_in), verified
+   * (phone, verified_at), expired, or failed (reason, e.g. sender_hidden).
+   * @param {string} sessionId
+   */
+  async getReverseOtp(sessionId) {
+    return this._get(`/auth/reverse/${encodeURIComponent(sessionId)}`);
+  }
+
   // --- Messaging -----------------------------------------------------------
 
   /**
@@ -155,6 +184,7 @@ export class LoginWAClient {
    * @param {boolean} [params.ptt]      - send audio as a voice note
    * @param {string} [params.deviceId]
    * @param {Object} [params.meta]
+   * @param {Object} [params.replyTo]  - { id, remote_jid?, from_me? }
    */
   async sendMessage(params) {
     return this._post('/messages/send', compact({
@@ -168,12 +198,30 @@ export class LoginWAClient {
       ptt: params.ptt,
       device_id: params.deviceId,
       meta: params.meta,
+      reply_to: params.replyTo ?? params.reply_to ?? params.quoted,
     }));
   }
 
   /** Convenience: send a plain text message. */
-  sendText({ phone, message, deviceId, meta } = {}) {
-    return this.sendMessage({ phone, message, type: 'text', deviceId, meta });
+  sendText({ phone, message, deviceId, meta, replyTo, reply_to, quoted } = {}) {
+    return this.sendMessage({ phone, message, type: 'text', deviceId, meta, replyTo: replyTo ?? reply_to ?? quoted });
+  }
+
+  /**
+   * Revoke a previously sent message (delete for everyone).
+   * Does not consume quota. Body: messageId, phone, optional deviceId.
+   */
+  deleteMessage({ messageId, message_id, phone, deviceId } = {}) {
+    return this._post('/messages/delete', compact({
+      message_id: messageId ?? message_id,
+      phone,
+      device_id: deviceId,
+    }));
+  }
+
+  /** Poll one message status (queued|sent|delivered|read|failed|revoked). */
+  getMessage(messageId) {
+    return this._get(`/messages/${encodeURIComponent(messageId)}`);
   }
 
   /** Convenience: send an image by public URL. */

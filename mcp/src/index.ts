@@ -17,7 +17,7 @@ import { LoginWAClient } from './client.js';
 import { DEFAULT_BASE_URL, PRICING_URL, REGISTER_URL, WELCOME_URL } from './constants.js';
 import { registerTools } from './tools.js';
 
-const PACKAGE_VERSION = '0.1.2';
+const PACKAGE_VERSION = '0.2.0';
 
 function createServer(): McpServer {
   const apiKey = process.env.LOGINWA_API_KEY?.trim() ?? '';
@@ -60,8 +60,11 @@ function createServer(): McpServer {
             '',
             '## Tools (P0)',
             '- `device_status`, list devices; honestly report offline; send user to /welcome',
-            '- `otp_start` / `otp_verify`, WhatsApp OTP flow',
+            '- `otp_start` / `otp_verify`, WhatsApp OTP flow (LoginWA sends the code)',
+            '- `reverse_otp_start` / `reverse_otp_status`, reverse OTP: the user sends LOGIN <code> to your number, LoginWA sends nothing',
             '- `send_message`, text/media send',
+            '- `delete_message`, revoke an outbound message (delete for everyone)',
+            '- `get_message`, poll one message status including revoked',
             '- `list_campaigns` / `get_campaign` / `create_campaign` / `send_campaign`, broadcast',
             '',
             '## Not in P0',

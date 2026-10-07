@@ -6,8 +6,8 @@ namespace LoginWA\SDK;
  * LoginWA PHP SDK
  *
  * A dependency-free (curl) client for the LoginWA WhatsApp API (v1).
- * Covers OTP, messaging (text + media), number check, devices (QR &
- * pairing-code linking, groups), webhooks, broadcast campaigns, and the
+ * Covers OTP, reverse OTP, messaging (text + media), number check, devices
+ * (QR & pairing-code linking, groups), webhooks, broadcast campaigns, and the
  * IP whitelist.
  *
  *   $wa = new \LoginWA\SDK\Client(getenv('LOGINWA_API_KEY'));
@@ -31,7 +31,8 @@ class Client
     // --- OTP -----------------------------------------------------------------
 
     /**
-     * @param array<string, mixed> $payload phone, country_code?, otp_length?, message_template?, device_id?, meta?
+     * @param array<string, mixed> $payload phone, country_code?, otp_length?, message_template?
+     *        (placeholders {code}, {ttl} minutes, {app}), device_id?, meta?
      * @return array<string, mixed>
      */
     public function startOtp(array $payload): array
@@ -48,6 +49,30 @@ class Client
         return $this->request('POST', '/auth/verify', $payload);
     }
 
+    /**
+     * Start a reverse OTP session. LoginWA sends nothing: the user sends
+     * `message` (LOGIN <code>) to your connected number via `wa_link`.
+     * Billed only when the login succeeds.
+     *
+     * @param array<string, mixed> $payload phone? (omit for Login with WhatsApp), country_code?, device_id?, meta?
+     * @return array<string, mixed> session_id, mode, code, message, receiver_phone, wa_link, expires_in, quota_remaining
+     */
+    public function startReverseOtp(array $payload = []): array
+    {
+        return $this->request('POST', '/auth/reverse/start', $payload);
+    }
+
+    /**
+     * Read a reverse OTP session: pending (expires_in), verified (phone,
+     * verified_at), expired, or failed (reason, e.g. sender_hidden).
+     *
+     * @return array<string, mixed>
+     */
+    public function getReverseOtp(string $sessionId): array
+    {
+        return $this->request('GET', '/auth/reverse/' . rawurlencode($sessionId));
+    }
+
     // --- Messaging -----------------------------------------------------------
 
     /**
@@ -55,12 +80,34 @@ class Client
      *
      * @param array<string, mixed> $payload phone (required); for text: message;
      *        for media: type (image|video|document|audio) + media_url, plus
-     *        optional caption, filename, mimetype, ptt; optional device_id, meta.
+     *        optional caption, filename, mimetype, ptt; optional device_id, meta,
+     *        reply_to ({id, remote_jid?, from_me?}; aliases replyTo, quoted).
      * @return array<string, mixed>
      */
     public function sendMessage(array $payload): array
     {
         return $this->request('POST', '/messages/send', $payload);
+    }
+
+    /**
+     * Revoke a previously sent WhatsApp message (delete for everyone).
+     *
+     * @param array<string, mixed> $payload message_id, phone, optional device_id
+     * @return array<string, mixed>
+     */
+    public function deleteMessage(array $payload): array
+    {
+        return $this->request('POST', '/messages/delete', $payload);
+    }
+
+    /**
+     * Fetch one message's status (queued|sent|delivered|read|failed|revoked).
+     *
+     * @return array<string, mixed>
+     */
+    public function getMessage(string $messageId): array
+    {
+        return $this->request('GET', '/messages/' . rawurlencode($messageId));
     }
 
     /**

@@ -24,6 +24,10 @@
       "key": "api_key",
       "value": "YOUR_API_KEY_SECRET",
       "type": "string"
+    },
+    {
+      "key": "reverse_session_id",
+      "value": ""
     }
   ],
   "item": [
@@ -138,6 +142,57 @@
               "mode": "raw",
               "raw": "{\n  \"session_id\": \"otp_9f3c1b2a4d\",\n  \"otp_code\": \"123456\"\n}"
             }
+          }
+        },
+        {
+          "name": "Start Reverse OTP (v1)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/reverse/start",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reverse",
+                "start"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"meta\": {\n    \"order\": \"A1\"\n  }\n}"
+            },
+            "description": "Reverse OTP (Login with WhatsApp). The end user sends the returned message (LOGIN <code>) to your connected number via wa_link; LoginWA sends nothing. Omit phone so any sender can complete it (8-digit code, their number is returned); pass phone to bind it (6-digit code). Billed 1 quota per successful login."
+          }
+        },
+        {
+          "name": "Reverse OTP Status (v1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/reverse/{{reverse_session_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reverse",
+                "{{reverse_session_id}}"
+              ]
+            },
+            "description": "Poll every 2-3 seconds until status is verified (with phone), expired, or failed (reason sender_hidden). Or rely on the otp.verified webhook."
           }
         }
       ]
